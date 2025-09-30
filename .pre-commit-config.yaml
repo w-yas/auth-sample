@@ -1,0 +1,41 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 25.0.0
+    hooks:
+      - id: black
+        args: [--line-length=99]
+
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.1
+    hooks:
+      - id: isort
+        args: [
+            --profile=black, # Blackと整形スタイルを揃える
+            --line-length=99, # 行の長さ制限（Blackと一致）
+            --multi-line=3, # 改行スタイル（VERTICAL_HANGING_INDENT）
+            --force-grid-wrap=0, # 要素数に関係なく改行しない
+            --use-parentheses, # 括弧で囲む（Blackと一致）
+            --trailing-comma, # 最後にカンマを付ける（Blackと一致）
+            --combine-as, # as付きimportをまとめる
+            --float-to-top, # 未使用importを上に移動
+            --skip-gitignore, # `.gitignore` にあるファイルはスキップ
+            -p,
+            back,
+          ]
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.0
+    hooks:
+      - id: flake8
+        args:
+          - "--max-line-length=99"
+          # 二項演算子の前に改行(W503), スライスのコロンの前にスペース(E203), import順序の警告(I100, I201)
+          - "--ignore=W503,I100,I201,W292,E203"
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.16.1
+    hooks:
+      - id: mypy
+        args: ["--config-file=mypy.ini", "--pretty"]
+        additional_dependencies:
+          - fastapi
